@@ -363,3 +363,17 @@ a_copy = CSV.read(a_file_in_zip)
 
 a == a_copy
 ```
+
+### Reading CSV directly from an url
+```julia
+using CSV, HTTP
+
+function CSV_read_website(url::String,args...;kwargs...)
+  response = HTTP.get(url)
+  response_body = String(response.body)
+  io_buff=IOBuffer(response_body)
+  return CSV.read(io_buff,args...;kwargs...)
+end
+
+data = CSV_read_website("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
+```
